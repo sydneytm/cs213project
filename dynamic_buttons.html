@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+  <link rel="stylesheet" href="style.css">
+    <title>Title</title>
+</head>
+
+<body>
+
+<h1 style="align-content: center"> Dartboard Probability</h1>
+
+<div class="container">
+  <div class="buttons" id="p1_options">
+    <h2>Player One</h2>
+  </div>
+
+  <div class="buttons" id="p2_options">
+    <h2>Player Two</h2>
+  </div>
+</div>
+
+
+<button onclick="get_probability()">Get Probability</button><br><br>
+
+<h2> Round Number: </h2>
+
+<p id="round"></p>
+
+
+<h2> Player 1: </h2>
+<p id="p1_points"></p>
+<h2> Player 2: </h2>
+<p id="p2_points"></p>
+
+<h2> Probability of Player 1 winning: </h2>
+<p id="p1_probability"></p>
+<h2> Probability of Player 2 winning: </h2>
+<p id="p2_probability"></p>
+
+
+<script>
+  let player_1_points = 0;
+  let player_2_points = 0;
+  let round_number = 0;
+
+  let p1_current_hit = 0;
+  let p2_current_hit = 0;
+
+  function add_player_points(button) {
+
+    const value = parseInt(button.textContent);
+    const player = button.parentNode.id;
+
+    if (player === 'p1_options') {
+      p1_current_hit = value;
+      document.getElementById('p1_display_hit').textContent = value.toString();
+    }
+    else if (player === 'p2_options') {
+      p2_current_hit = value;
+      document.getElementById('p2_display_hit').textContent = value.toString();
+    }
+  }
+
+  function get_probability(num1, num2) {
+    round_number++;
+    document.getElementById('round').innerText = round_number.toString();
+
+    if(round_number < 10) {
+      // let num1 = parseFloat(document.getElementById('num1').value);
+      // let num2 = parseFloat(document.getElementById('num2').value);
+
+      player_1_points += p1_current_hit;
+      player_2_points += p2_current_hit;
+
+      document.getElementById('p1_points').innerText = player_1_points;
+      document.getElementById('p2_points').innerText = player_2_points;
+
+      let p2_probability = (100-player_1_points)/(10-round_number);
+      let p1_probability = (100-player_2_points)/(10-round_number);
+
+      let total = p1_probability + p2_probability;
+
+      p1_probability = ((p1_probability/total)*100).toFixed(2);
+      p2_probability = ((p2_probability/total)*100).toFixed(2);
+
+      document.getElementById('p1_probability').innerText = (p1_probability.toString() + "%");
+      document.getElementById('p2_probability').innerText = (p2_probability.toString()) + "%";
+      // document.getElementById('p2_probability').innerText = p2_probability.toString();
+    }
+
+    else if(player_1_points > player_2_points){
+      document.getElementById('p1_points').innerText = "Player 1 Wins!";
+    }
+    else if(player_2_points > player_1_points){
+      document.getElementById('p2_points').innerText = "Player 2 Wins!";
+    }
+  }
+
+
+
+  // Add Buttons for the options for each player hit
+  const p1Container = document.getElementById('p1_options');
+  const p2Container = document.getElementById('p2_options');
+
+  for (let i = 1; i <= 10; i++) {
+
+    const p1_button = document.createElement('button');
+    p1_button.textContent = i.toString();
+    p1_button.onclick = function () {
+      add_player_points(this);
+    };
+    p1Container.appendChild(p1_button);
+
+    const p2_button = document.createElement('button');
+    p2_button.textContent = i.toString();
+    p2_button.onclick = function () {
+      add_player_points(this);
+    };
+    p2Container.appendChild(p2_button);
+  }
+
+
+  const p1_display_hit = document.createElement('p');
+  p1_display_hit.textContent = 'Selected: ';
+  p1Container.appendChild(p1_display_hit);
+
+  const p2_display_hit = document.createElement('p');
+  p2_display_hit.textContent = 'Selected: ';
+  p2Container.appendChild(p2_display_hit);
+
+  p1_display_hit.id = "p1_display_hit"
+  p2_display_hit.id = "p2_display_hit"
+
+
+
+
+</script>
+
+
+</body>
+</html>
